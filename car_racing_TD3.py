@@ -255,9 +255,7 @@ class Agent:
 
 
 def car_in_road_reward(image):
-    # car_range: ()
-    # 转换为HSV颜色空间
-    # hsv_image = cv2.cvtColor(image[60:84, 40:60, :], cv2.COLOR_RGB2HSV)
+    # 计算小车得分，按照小车附近绿色和灰色像素比来确定reward，灰色越多证明小车越靠近道路中央，得分越多
     part_image = image[60:84, 40:60, :]
     # 定义道路、小车和草地的颜色范围（根据实际情况调整）
     road_color_lower = np.array([90, 90, 90], dtype=np.uint8)
@@ -267,10 +265,7 @@ def car_in_road_reward(image):
 
     # 根据颜色范围创建掩膜
     road_mask = cv2.inRange(part_image, road_color_lower, road_color_upper)
-    # car_mask = cv2.inRange(hsv_image, car_color_lower, car_color_upper)
     grass_mask = cv2.inRange(part_image, grass_color_lower, grass_color_upper)
-
-    # 对掩膜进行图像处理，例如腐蚀和膨胀，以去除噪声和平滑边界
 
     # 在道路区域和草地区域内计算像素数量
     road_pixel_count = cv2.countNonZero(road_mask)
